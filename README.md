@@ -2,7 +2,7 @@
 This is a minimal REST API specification and implementation for controlling a dosing pump.
 
 ## Specification
-The OpenAPI specification can be seen [here](https://petstore.swagger.io/?url=https://raw.githubusercontent.com/rmorenoga/small-api-example/main/ESP8266/ESPMinPumpEx/openapi.yaml), or directly in the openapi.yaml [file](ESP8266/ESPMinPumpEx/openapi.yaml).
+The OpenAPI specification can be seen [here](https://petstore.swagger.io/?url=https://raw.githubusercontent.com/rmorenoga/small-api-example/main/ESP8266/ESPMinPumpEx/openapi.yaml).
 
 ## Implementation
 
