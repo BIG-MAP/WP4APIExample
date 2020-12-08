@@ -2,17 +2,14 @@ openapi: 3.0.0
 
 info:
   title: Pump-API-Example
-  description: This is an minimal example of using a REST API to control a directly connected dosing pump
+  description: This is an minimal REST API to control a dosing pump
     
     ----
     
-    Using this API you can retrieve information about the pump and turn it on and off with GET commands and resource locations
+    Using this API you can retrieve information about the pump and turn it on and off with GET commands and resource paths
   contact:
     name: Rodrigo Moreno Garcia
     email: rodr@itu.dk
-  license:
-    name: "Apache 2.0"
-    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
   version: 0.1.0
 
 servers:
