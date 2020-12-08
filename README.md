@@ -94,7 +94,7 @@ The following hardware is connected to the ESP8266 device:
 ### Connections
 * Pin D4 (GPIO 2) of the ESP8266 is connected to ENA in the L298N board.
 * In1 and In2 in the L298N board are connected to 5V and Gnd respectively.
-* Ground pins on the ESP8266 and the L298N board are connected together.
+* Ground pins on the ESP8266 and the L298N board are connected together and to the main power source ground.
 * The pump terminals are connected to OUT1 and OUT2 on the L298N board.
 
 
