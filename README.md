@@ -27,7 +27,7 @@ void config_rest_server_routing() { //Routing function: Set actions for incoming
     http_rest_server.on("/pump/off", HTTP_GET, get_pump_off);//Turn pump off and return status
 }
 ```
-* Action: The program routine that is executed when hadling a request, it is in charge of interpreting the incoming body of the request and building the JSON response (serialization) and sending it through the server.
+* Action: The program routine that is executed when hadling a request, it is in charge of interpreting the incoming body of the request, building the JSON response (serialization) and sending it through the server.
 
 ```java
 void get_pump_on(){//GET /pump/on action
