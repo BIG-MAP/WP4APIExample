@@ -1,0 +1,99 @@
+openapi: 3.0.0
+
+info:
+  title: Pump-API-Example
+  description: This is an minimal example of using a REST API to control a directly connected dosing pump
+    
+    ----
+    
+    Using this API you can retrieve information about the pump and turn it on and off with GET commands and resource locations
+  contact:
+    name: Rodrigo Moreno Garcia
+    email: rodr@itu.dk
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+  version: 0.1.0
+
+servers:
+  - url: '190.157.46.49:81/'
+    variables:
+      protocol:
+        default: http
+        enum:
+          - http
+          
+          
+paths:
+  /pump:
+    
+    get:
+      tags:
+        - Pump
+      summary: return pump info
+      description: return pump information and possible parameters
+      responses:
+        '200':
+          description: The pump object (info) in JSON format
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pump'
+                
+  /pump/on:
+  
+    get:
+      tags:
+        - Pump
+      summary: turn the pump on
+      description: turn the pump on in the system
+      responses:
+        '200':
+          description: The pump object (info) in JSON format
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pump'
+                
+  /pump/off:
+  
+    get:
+      tags:
+        - Pump
+      summary: turn the pump off
+      description: turn the pump off in the system
+      responses:
+        '200':
+          description: The pump object (info) in JSON format
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pump'
+                
+                
+    
+                
+components:
+  schemas:
+    Pump:
+      type: object
+      properties:
+        id:
+          type: string
+          description: 'The pump id'
+        port:
+          type: integer
+          description: The port where the pump is connected (GPIO number)
+        status: 
+          type: integer
+          minimum: 0
+          maximum: 1
+          description: "The Pump status (0: off, 1: on)"
+      example:
+        id: 1
+        port: 2
+        status: 0
+  
+  
+      
+        

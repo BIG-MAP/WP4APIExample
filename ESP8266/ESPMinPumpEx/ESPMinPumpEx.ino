@@ -1,4 +1,13 @@
-//This code is based on https://gist.github.com/mancusoa74/9450227d1251e0a527965e858cf6eebd  
+/*
+  Min Pump API
+
+ A simple web server that implements a minimal API for controlling a dosing pump
+
+ created 2 Dec 2020
+ by Rodrigo Moreno
+ based on https://gist.github.com/mancusoa74/9450227d1251e0a527965e858cf6eebd 
+ */
+
 
 #include <stdio.h>
 #include <ESP8266WebServer.h> //Web server tool
@@ -12,7 +21,7 @@
 const char* wifi_ssid = "SSID";
 const char* wifi_passwd = "psswd";
 
-struct Pump { //Small resource "database"
+struct Pump { //Resource "database"
     byte id;
     byte port;
     byte status;
@@ -23,10 +32,10 @@ const size_t capacity = JSON_OBJECT_SIZE(3); //Used to calculate JSON capacity i
 ESP8266WebServer http_rest_server(HTTP_REST_PORT);
 
 
-void init_pump_resource() //Database initialization
+void init_pump_resource() //"Database" initialization
 {
     pump_resource.id = 1; //Identifier
-    pump_resource.port = 2; //GPIO 2 in the hardware board
+    pump_resource.port = 2; //GPIO 2 in the hardware board (D4)
     pump_resource.status = HIGH; //Status: LOW for on, HIGH for off
     
     pinMode(pump_resource.port, OUTPUT); //Configure port as output
@@ -60,7 +69,7 @@ void get_pump() { //GET /pump action
 }
 
 void get_pump_on(){//GET /pump/on action
-   pump_resource.status = LOW; //Change resource status
+   pump_resource.status = LOW; //Change pump status
    digitalWrite(pump_resource.port, pump_resource.status);//Change external pin status
    
    DynamicJsonDocument  doc(capacity);
@@ -99,6 +108,7 @@ void setup() {
   Serial.begin(115200);
 
     init_pump_resource();
+    
     if (init_wifi() == WL_CONNECTED) { //Connect to Wifi
         Serial.print("Connected to ");
         Serial.print(wifi_ssid);
