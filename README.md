@@ -2,12 +2,12 @@
 This is a minimal REST API specification and implementation for controlling a dosing pump.
 
 ## Specification
-The OpenAPI specification can be found here.
+The OpenAPI specification can be seen [here](https://petstore.swagger.io/?url=https://raw.githubusercontent.com/rmorenoga/small-api-example/main/ESP8266/ESPMinPumpEx/openapi.yaml), or directly in the openapi.yaml [file](ESP8266/ESPMinPumpEx/openapi.yaml).
 
 ## Implementation
 
 ### Computer
-The API can be implemented using different computer systems from the API specification. The example in this repository has been implemented using an ESP8266 NodeMCU V3 Wifi board.
+The API can be implemented using different computer systems from the API specification. The example in this repository has been implemented using an ESP8266 NodeMCU V3 Wifi [board](http://prometec.org/communications/nodemcu/arduino-ide/).
 
 ### Source Code
 The software implementation is done in the Arduino language and makes use of the ESP8266WebServer and ArduinoJson libraries.
@@ -87,15 +87,14 @@ void loop() {
 
 ### Hardware
 The following hardware is connected to the ESP8266 device:
-* L298N motor driver board
-* 12V, 3W peristaltic dosing pump
+* L298N motor driver [board](https://howtomechatronics.com/tutorials/arduino/arduino-dc-motor-control-tutorial-l298n-pwm-h-bridge/)
+* 12V, 3W peristaltic dosing [pump](https://www.adafruit.com/product/1150)
 * 12V and 5V power source
 
 ### Connections
 * Pin D4 (GPIO 2) of the ESP8266 is connected to ENA in the L298N board.
 * In1 and In2 in the L298N board are connected to 5V and Gnd respectively.
-* Ground pins on the ESP8266 and the L298N board are connected.
-* The L298N board is powered using 12V.
+* Ground pins on the ESP8266 and the L298N board are connected together.
 * The pump terminals are connected to OUT1 and OUT2 on the L298N board.
 
 
