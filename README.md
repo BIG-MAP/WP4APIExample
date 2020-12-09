@@ -1,6 +1,11 @@
 # Pump API
 This is a minimal REST API specification and implementation for controlling a dosing pump.
 
+## What is a REST API?
+An API (Application Programming Interface) is a software computer interface that can accept requests and provide responses to these requests, REST is a way of communication in which computers interchange data using APIs.
+
+Usually, REST APIs match HTTP commands (GET) and paths (/pump), also called URIs (Uniform resource identifiers), to program routines inside the server. Responses and requests can contain data in their body which can be stored in JSON format, a type of human readable data interchange format.
+
 ## Specification
 The minimal API is documented using the OpenAPI specification, the corresponding file can be found [here](/ESP8266/ESPMinPumpEx/minpumpapi.yaml). The specification file can also be rendered in an interactive form using the Swagger [editor](https://editor.swagger.io/) (go to file -> import yaml file)
 
