@@ -2,7 +2,7 @@ openapi: 3.0.0
 
 info:
   title: Pump-API-Example
-  description: This is an minimal REST API to control a dosing pump
+  description: This is a minimal REST API to control a dosing pump
     
     ----
     
