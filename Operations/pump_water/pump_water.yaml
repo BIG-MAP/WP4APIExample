@@ -6,11 +6,11 @@ info:
     
     ----
     
-    Using this API you can retrieve information about the pump and turn it on and off with GET commands and resource locations
+    Using this API you can run and retrieve pump_water operations
   contact:
     name: Rodrigo Moreno Garcia
     email: rodr@itu.dk
-  version: 0.2.0
+  version: 0.1.0
 
 servers:
   - url: ''
