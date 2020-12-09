@@ -14,9 +14,9 @@ The API can be implemented using different computer systems from the API specifi
 ### Source Code
 The software implementation is done in the Arduino language and makes use of the ESP8266WebServer and ArduinoJson libraries.
 Most languages have similar tools and frameworks for handling requests and providing 
-responses, and for handling JSON documents. Regardless of languaje or framework there are two main parts in the code:
+responses, and for handling JSON documents. There are two important parts in the code:
 
-* Routing: This part is in charge of matching the incoming request command (i.e GET) and path (i.e. /pump), with the corresponding program routine or action.
+* Routing: This part is in charge of matching the incoming request command (i.e GET) and path (i.e. /pump), with the corresponding program routine or action (get_pump function).
 
 ```java
 void config_rest_server_routing() { //Routing function: Set actions for incoming commands and locations
@@ -29,7 +29,7 @@ void config_rest_server_routing() { //Routing function: Set actions for incoming
     http_rest_server.on("/pump/off", HTTP_GET, get_pump_off);//Turn pump off and return status
 }
 ```
-* Action: The program routine that is executed when hadling a request, it is in charge of interpreting the incoming body of the request, building the JSON response (serialization) and sending it through the server.
+* Action: The program routine that is executed when handling a request, it is in charge of interpreting the incoming body of the request, building the JSON response (serialization) and sending it through the server.
 
 ```java
 void get_pump_on(){//GET /pump/on action
