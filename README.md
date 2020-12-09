@@ -2,9 +2,9 @@
 This is a minimal REST API specification and implementation for controlling a dosing pump.
 
 ## Specification
-The OpenAPI specification for the minimal API can be seen [here](https://petstore.swagger.io/?url=https://raw.githubusercontent.com/rmorenoga/pump-api/main/ESP8266/ESPMinPumpEx/openapi.yaml).
+The minimal API is documented using the OpenAPI specification, the corresponding file can be found [here](/ESP8266/ESPMinPumpEx/minpumpapi.yaml). The specification file can also be rendered in an interactive form using the Swagger [editor](https://editor.swagger.io/) (go to file -> import yaml file)
 
-The API specification for running pump_water operations can be seen [here](https://petstore.swagger.io/?url=https://raw.githubusercontent.com/rmorenoga/pump-api/main/Operations/pump_water/pump_water.yaml) (Implementation in progress)
+The API specification for running pump_water operations can be seen [here](/Operations/pump_water/pump_waterapi.yaml) (Implementation in progress)
 
 ## Implementation
 
