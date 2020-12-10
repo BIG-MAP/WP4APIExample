@@ -7,9 +7,29 @@ An API (Application Programming Interface) is a software computer interface that
 Usually, REST APIs match HTTP commands (GET) and paths (/pump), also called URIs (Uniform resource identifiers), to program routines inside the server. Responses and requests can contain data in their body which can be stored in JSON format, a type of human readable data interchange format.
 
 ## Specification
-The minimal API is documented using the OpenAPI specification, the corresponding file can be found [here](/ESP8266/ESPMinPumpEx/minpumpapi.yaml). The specification file can also be rendered in an interactive form using the Swagger [editor](https://editor.swagger.io/) (go to file -> import yaml file)
+The minimal pump API can receive 3 types of requests, with no parameters, all of them use the GET HTTP command so they can be sent from a web browser (Example: typing 190.157.46.49:81/pump prompts the browser to send a GET /pump request to the server):
 
-The API specification for running pump_water operations can be seen [here](/Operations/pump_water/pump_waterapi.yaml) (Implementation in progress)
+* GET /pump: Returns the pump data as a JSON document. Example response body: {“id”:1, “port”:2, “status”: 0}
+* GET /pump/on: Turns the pump on and returns the pump data as a JSON document. Example response body: {“id”:1, “port”:2, “status”: 0}
+* GET /pump/off: Turns the pump off and returns the pump data as a JSON document. Example response body: {“id”:1, “port”:2, “status”: 1}
+
+
+A more detailed specification using the OpenAPI specification, can be found in /ESP8266/ESPMinPumpEx/minpumpapi.yaml
+
+The specification file can also be rendered in an interactive form using the Swagger editor (go to file -> import yaml file)
+
+An example of an API that would run more advanced operations, for example pump-water operations could look like this:
+
+* GET /pump_water/params: return pump information and available parameter values. Example response: 
+{"id": 0,  "type": "pump_water",  "pumping_time": [0, 50],  "pumping_speed": [0,255],  "input_substances": ["Water"], "measure": [{"type": "temp", "measure_time": ["at_start",        "at_end"]}]}
+
+* POST /pump_water: receives a request with the desired parameters, runs the operation and returns the measured data. Example request body:
+{ "id": 1,  "type": "pump_water",  "pumping_time": 20,  "pumping_speed": 100, "input_substances": ["Water"],  "measure": [ {"type": "temp", "measure_time": "at_end" }] }
+
+Example response body
+{"id": 1,  "meta_data": { "id": 1,  "type": "pump_water",  "pumping_time": 20,   "pumping_speed": 100, "input_substances": [ "Water" ], "measure": [ { "type": "temp",       "measure_time": "at_end" } ] }, "data": [ {"type": "temp", "measured_data": 21.5 } ]}
+A more detailed specification can be seen in  /Operations/pump_water/pump_waterapi.yaml 
+
 
 ## Implementation
 
@@ -17,7 +37,7 @@ The API specification for running pump_water operations can be seen [here](/Oper
 The API can be implemented using different computer systems from the API specification. The example in this repository has been implemented using an ESP8266 NodeMCU V3 Wifi [board](http://prometec.org/communications/nodemcu/arduino-ide/).
 
 ### Source Code
-The software implementation is done in the Arduino language and makes use of the ESP8266WebServer and ArduinoJson libraries.
+The software implementation is built in the Arduino language and makes use of the ESP8266WebServer and ArduinoJson libraries.
 Most languages have similar tools and frameworks for handling requests and providing 
 responses, and for handling JSON documents. There are two important parts in the code:
 
