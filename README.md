@@ -4,7 +4,11 @@ This is a minimal REST API specification and implementation for controlling a do
 ## What is a REST API?
 An API (Application Programming Interface) is a software computer interface that can accept requests and provide responses to these requests, REST is a way of communication in which computers interchange data using APIs.
 
+<img src="https://github.com/rmorenoga/pump-api/blob/main/ReadmeImages/SimpleAPI.png" width="700">
+
 Usually, REST APIs match HTTP commands (GET) and paths (/pump), also called URIs (Uniform resource identifiers), to program routines inside the server. Responses and requests can contain data in their body which can be stored in JSON format, a type of human readable data interchange format.
+
+<img src="https://github.com/rmorenoga/pump-api/blob/main/ReadmeImages/HTTPAPI.png" width="700">
 
 ## Specification
 The minimal pump API can receive 3 types of requests, with no parameters, all of them use the GET HTTP command so they can be sent from a web browser (Example: typing 190.157.46.49:81/pump prompts the browser to send a GET /pump request to the API server):
