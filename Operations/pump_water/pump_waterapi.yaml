@@ -110,7 +110,7 @@ components:
                 measure_time: "at_start"
           data:
             - type: temp
-              measured_data: 19.8
+              measured_data: 19.7
               
               
     Pump_water_operation:
