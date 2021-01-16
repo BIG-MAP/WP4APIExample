@@ -10,8 +10,10 @@ Usually, REST APIs match HTTP commands (GET) and paths (/pump), also called URIs
 
 <img src="https://github.com/rmorenoga/pump-api/blob/main/ReadmeImages/HTTPAPI.png" width="700">
 
+# Basic pump API
+
 ## Specification
-The minimal pump API can receive 3 types of requests, with no parameters, all of them use the GET HTTP command so they can be sent from a web browser (Example: typing 190.157.46.49:81/pump prompts the browser to send a GET /pump request to the API server):
+The basic version of the pump API can receive 3 types of requests, with no parameters, all of them use the GET HTTP command so they can be sent from a web browser (Example: typing 190.157.46.49:81/pump prompts the browser to send a GET /pump request to the API server):
 
 * GET /pump: Returns the pump data as a JSON document. Example response body: {“id”:1, “port”:2, “status”: 0}
 * GET /pump/on: Turns the pump on and returns the pump data as a JSON document. Example response body: {“id”:1, “port”:2, “status”: 0}
@@ -189,6 +191,19 @@ The same hardware can be connected to the ESP8266 device as with the Raspberry P
 * Ground pins on the ESP8266 and the L298N board are connected together and to the main power source ground.
 * 12V from the power source is connected to the 12V pin on the L298N board.
 * The pump terminals are connected to OUT1 and OUT2 on the L298N board.
+
+# Pump API
+
+This more elaborated version of the API adds more functionality, including the posibility of turning the pump on for an specified amount of time and also to take measurements of temperature using a temperature probe of the water. This version also organizes the data to be validated in the JSON request and the data to be sent as a JSON response using models (Specifications of fields and their values). The next diagram shows the main hardware components that are coupled to the API.
+
+## Specification
+
+
+## Implementation
+
+
+## Hardware
+
 
 
 
