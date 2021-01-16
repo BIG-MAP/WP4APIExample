@@ -225,7 +225,8 @@ The pump API only accepts a POST request at /pump_water that sets up and runs th
 
 The expected request body specification, including descriptions of the valid parameters that can be used, can be found by doing a GET request to the /docs URI (i.e. 192.168.0.29/docs), this will display a documentation page based on the [OpenAPI](https://swagger.io/specification/) specification and the [Swagger](https://swagger.io/) tool.
 
-<img src="https://github.com/rmorenoga/pump-api/blob/devel/ReadmeImages/OpenAPIPOST.JPG" width="700">
+<img src="https://github.com/rmorenoga/pump-api/blob/devel/ReadmeImages/OpenAPIPOST.JPG" width="750">
+<img src="https://github.com/rmorenoga/pump-api/blob/devel/ReadmeImages/Model.JPG" width="500">
 
 ### Tools for sending a POST request
 
