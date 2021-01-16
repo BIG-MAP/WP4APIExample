@@ -1,4 +1,4 @@
-# Pump API
+# Pump API Example
 This is a minimal REST API specification and implementation for controlling a dosing pump.
 
 ## What is a REST API?
@@ -27,7 +27,7 @@ The API can be implemented using different computer systems from the API specifi
 
 ### Raspberry Pi
 For this device, the implementation makes use of the Python language and the Fastapi framework. Fastapi can be run in any computer system with a python interpreter. Most programming languages have similar tools and frameworks for developing APIs.
-There are two main parts on the source [code](/RasPi/rpiserver/server.py):
+There are two main parts on the source [code](/RasPi/rpiserver/server-basic.py):
 
 * Routing: This part is in charge of matching the incoming request commands (GET), paths (/pump) and their corresponding actions (show_pump_info) inside the api (pump_app)
 * Action: The program routine that is executed when handling a request, which is converted to a JSON document by default.
@@ -85,9 +85,9 @@ The following hardware is connected to the Raspberry Pi:
 
 * L298N motor driver [board](https://howtomechatronics.com/tutorials/arduino/arduino-dc-motor-control-tutorial-l298n-pwm-h-bridge/)
 * 12V, 3W peristaltic dosing [pump](https://www.adafruit.com/product/1150)
-* 12V and 5V power source
+* 12V DC and 5V DC power source
 
-Connections:
+Connections (There are two different ways of identifying electrical pins in the Raspberry Pi, please see this [document](https://pinout.xyz/#) for more information):
 
 * Pin 36 (GPIO 16) of the Raspberry Pi is connected to ENA in the L298N board.
 * In1 and In2 in the L298N board are connected to 5V and Gnd respectively.
@@ -194,21 +194,126 @@ The same hardware can be connected to the ESP8266 device as with the Raspberry P
 
 # Pump API
 
-This more elaborated version of the API adds more functionality, including the posibility of turning the pump on for an specified amount of time and also to take measurements of temperature using a temperature probe of the water. This version also organizes the data to be validated in the JSON request and the data to be sent as a JSON response using models (Specifications of fields and their values). The next diagram shows the main hardware components that are coupled to the API.
+This more elaborated version of the API adds more functionality by wrapping the pump in a pump_water operation, which enables the posibility of turning the pump on for an specified amount of time and also to take measurements of temperature using a temperature probe. This version also organizes the data to be validated in the JSON request and the data to be sent as a JSON response using models (Specifications of fields and their values). The next diagram shows the main hardware components that are coupled to the API.
 
 <img src="https://github.com/rmorenoga/pump-api/blob/devel/ReadmeImages/PumpSensorTank.jpg" width="700">
 
 ## Specification
 
+The pump API only accepts a POST request at /pump_water that sets up the pump_water operation, the request must include a JSON document as a body with the operation parameters, here is an example of a valid JSON body.
+
+```javascript
+{
+  "operation_type": "pump",
+  "pumping_time": 3,
+  "pumping_speed": 100,
+  "input_substance": [
+    "water"
+  ],
+  "measure": [
+    {
+      "measure_type": "temp",
+      "measure_time": [
+        "at_start", "at_end"
+      ]
+    }
+  ]
+}
+```
+
+The request body specification can also be found by doing a GET request to the /docs URI (i.e. 192.168.0.29/docs), this will display a documentation page based on the [OpenAPI](https://swagger.io/specification/) specification and the [Swagger](https://swagger.io/) tool.
+
+Image
+
+### Tools for sending a POST request
+
+In order to send the POST request to the API there are several tools available, if you are familiar with the command line [curl](https://curl.se/)) is a good alternative. [Postman](https://www.postman.com/downloads/) is another useful, graphical tool for sending different types of requests and testing APIs. To send a POST request using Postman create a new request on the upper left corner, configure the type of request in the dropdown menu and specify the URI. The JSON body can be inpur in using the Body tab and selecting raw and subsequently JSON from the right dropdown menu. The actual JSON document must be typed in the text box below
+
 
 ## Implementation
 
+The example [implementation](/RasPi/rpiserver/server.py) is again built using FastAPI. This time the code includes classes that represent the data models that can be handled by the API, data is validated automatically using the [pydantic](https://pydantic-docs.helpmanual.io/) library, for example the model that runs the pump_water operation and validates the incoming request data is like:
 
+```python
+class Measure(BaseModel):
+    measure_type: str = Field(..., title = "The measurement type", description = "The type of measurement to take", max_length = 30, example = " temperature")
+    measure_time: List[str] = Field(["at_start","at_end"],title = "The moment of measurement", description = "The moment at which temperature is taken in the process", min_items = 1, max_items = 2)
+
+class Pump_water(BaseModel):
+    operation_type: str = Field(..., title = "The operation type", description = "The operation type to run",max_length = 30, example = "pump")
+    pumping_time: int = Field(..., title = "The pumping time", description = "The pumping time in seconds", gt = 0, le=100,units = "s", example = 10)
+    pumping_speed: int = Field(..., title = "The pump speed", description = "The pump speed as 8bit PWM values", ge = 0, le = 100, units = None, example = 150 )
+    input_substance: List[str] = Field(["water"],title="The type of input substance to use", description = "The types of input substances to use in the operation", min_items = 1, max_items =5)
+    measure: List[Measure]
+
+    #Pump functions
+    def run(self):
+        GPIO.output(IN1,True)
+        GPIO.output(IN2,False)
+        print("IN1", True)
+        print("IN2", False)
+
+        #ChangeDutyCycle(speed) function changes the motor speed (accepts values from 0 to 100)
+        pump.ChangeDutyCycle(self.pumping_speed)
+        print("pump_speed", self.pumping_speed)
+
+    def stop(self):
+        GPIO.output(IN2,False)
+        GPIO.output(IN1,False)
+        print("IN1", False)
+        print("IN2", False)
+```
+
+Each attribute in the class represents a field in the JSON body, which features (min values, type, etc) can be specified
+```python
+pumping_speed: int = Field(..., title = "The pump speed", description = "The pump speed as 8bit PWM values", ge = 0, le = 100, units = None, example = 150 )
+```
+A model can nest other models in its fields, for example, the response model uses the request model to send back the data used
+```python
+class Pump_water_data(BaseModel):
+    meta_data: Pump_water
+    data: List[float] = Field([], title = "The output data", description = "The data as a list of float values", min_items = 1, example = [0.1,0.5,1.6,2.4,3.9])
+```
+
+These models can be specified when defining the action to the POST request:
+
+```python
+@pump_app.post("/pump_water",response_model=Pump_water_data)
+def run_pump_water(operation: Pump_water):
+...
+```
+
+Finnally the temperature sensor is read using the 1-Wire interface of the Raspberry Pi, for this purpose the interface must be enabled in the Raspberry (see this [tutorial](https://www.raspberrypi-spy.co.uk/2018/02/enable-1-wire-interface-raspberry-pi/) for details on how to do this), after that, the w1thermsensor library can be used
+```python
+from w1thermsensor import W1ThermSensor
+...
+sensor = W1ThermSensor()
+...
+tempCelcius = sensor.get_temperature()
+```
 ## Hardware
 
+The same hardware as in the basic pump API raspberry implementation is used, this version of the API supports taking temperature values from a sensor.
 
+* L298N motor driver [board](https://howtomechatronics.com/tutorials/arduino/arduino-dc-motor-control-tutorial-l298n-pwm-h-bridge/)
+* 12V, 3W peristaltic dosing [pump](https://www.adafruit.com/product/1150)
+* Waterproof DS18B20 based temperature [sensor](https://www.application-datasheet.com/pdf/makeblock/11014.pdf) 
+* 12V DC and 5V DC power source
+* A 4.7K Ohm resistor is needed as a pull up resistor for connecting the temperature sensor to the Raspberry Pi 
 
+Connections:
 
+The connections change from the basic pump API to accomodate for the new functionality (There are two different ways of identifying electrical pins in the Raspberry Pi, please see this [document](https://pinout.xyz/#) for more information)
+
+* Pin 12 (GPIO 18) of the Raspberry Pi is connected to ENA in the L298N board.
+* Pin 16 (GPIO 23) and pin 18 (GPIO 24) of the Raspberry Pi are connected to IN1 and IN2 respectively in the L298N board.
+* Ground pins on the Raspberry Pi and the L298N board are connected together and to the main power source ground.
+* The red cable of the temperature sensor is connected to pin 1 (3V3 Power) in the Raspberry Pi.
+* The black cable of the temperature sensor is connected to pin 9 (Ground) in the Raspberry Pi.
+* The data cable (yellow) of the temperature sensor is connected to pin 7 (GPIO 4) in the Raspberry Pi.
+* The sensor's data cable must be connected to its red cable through a 4.7K Ohm resistor.
+* 12V from the power source is connected to the 12V pin on the L298N board.
+* The pump terminals are connected to OUT1 and OUT2 on the L298N board.
 
 
 
