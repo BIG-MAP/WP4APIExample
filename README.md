@@ -194,13 +194,15 @@ The same hardware can be connected to the ESP8266 device as with the Raspberry P
 
 # Pump API
 
-This more elaborated version of the API adds more functionality by wrapping the pump in a pump_water operation, which enables the posibility of turning the pump on for an specified amount of time and also to take measurements of temperature using a temperature probe. This version also organizes the data to be validated in the JSON request and the data to be sent as a JSON response using models (Specifications of fields and their values). The next diagram shows the main hardware components that are coupled to the API.
+This more elaborated version of the API adds more functionality by wrapping the pump in a pump_water operation, which enables the posibility of turning the pump on for an specified amount of time and also of taking measurements of temperature using a temperature probe. 
+
+This version also validates data in the expected JSON request and data to be sent as a JSON response using models. The next diagram shows the main hardware components that are coupled to the API.
 
 <img src="https://github.com/rmorenoga/pump-api/blob/devel/ReadmeImages/PumpSensorTank.jpg" width="700">
 
 ## Specification
 
-The pump API only accepts a POST request at /pump_water that sets up the pump_water operation, the request must include a JSON document as a body with the operation parameters, here is an example of a valid JSON body.
+The pump API only accepts a POST request at /pump_water that sets up and runs the pump_water operation. The request must include a JSON document as a body with the operation parameters, here is an example of a valid JSON body.
 
 ```javascript
 {
@@ -221,18 +223,22 @@ The pump API only accepts a POST request at /pump_water that sets up the pump_wa
 }
 ```
 
-The request body specification can also be found by doing a GET request to the /docs URI (i.e. 192.168.0.29/docs), this will display a documentation page based on the [OpenAPI](https://swagger.io/specification/) specification and the [Swagger](https://swagger.io/) tool.
+The expected request body specification, including descriptions of the valid parameters that can be used, can be found by doing a GET request to the /docs URI (i.e. 192.168.0.29/docs), this will display a documentation page based on the [OpenAPI](https://swagger.io/specification/) specification and the [Swagger](https://swagger.io/) tool.
 
-Image
+<img src="https://github.com/rmorenoga/pump-api/blob/devel/ReadmeImages/OpenAPIPOST.JPG" width="700">
 
 ### Tools for sending a POST request
 
-In order to send the POST request to the API there are several tools available, if you are familiar with the command line [curl](https://curl.se/)) is a good alternative. [Postman](https://www.postman.com/downloads/) is another useful, graphical tool for sending different types of requests and testing APIs. To send a POST request using Postman create a new request on the upper left corner, configure the type of request in the dropdown menu and specify the URI. The JSON body can be inpur in using the Body tab and selecting raw and subsequently JSON from the right dropdown menu. The actual JSON document must be typed in the text box below
+In order to send the POST request to the API there are several tools available (if you are familiar with the command line [curl](https://curl.se/) is a good alternative). 
+
+[Postman](https://www.postman.com/downloads/) is another useful, graphical tool for sending different types of requests to APIs. To send a POST request using Postman create a new request on the upper left corner, configure the type of request in the dropdown menu and specify the URI. The JSON body can be input using the Body tab and selecting raw, subsequently select JSON from the right dropdown menu. The actual JSON document must be typed in the text box below.
+
+<img src="https://github.com/rmorenoga/pump-api/blob/devel/ReadmeImages/Postman.JPG" width="700">
 
 
 ## Implementation
 
-The example [implementation](/RasPi/rpiserver/server.py) is again built using FastAPI. This time the code includes classes that represent the data models that can be handled by the API, data is validated automatically using the [pydantic](https://pydantic-docs.helpmanual.io/) library, for example the model that runs the pump_water operation and validates the incoming request data is like:
+The example [implementation](/RasPi/rpiserver/server.py) is again built using FastAPI. This time the code includes classes that represent the data models that can be handled by the API, data is validated automatically using the [pydantic](https://pydantic-docs.helpmanual.io/) library. For example, the model that runs the pump_water operation and validates the incoming request data is:
 
 ```python
 class Measure(BaseModel):
@@ -275,7 +281,7 @@ class Pump_water_data(BaseModel):
     data: List[float] = Field([], title = "The output data", description = "The data as a list of float values", min_items = 1, example = [0.1,0.5,1.6,2.4,3.9])
 ```
 
-These models can be specified when defining the action to the POST request:
+These models can be specified when defining the action executed when receiving the POST request:
 
 ```python
 @pump_app.post("/pump_water",response_model=Pump_water_data)
@@ -293,7 +299,7 @@ tempCelcius = sensor.get_temperature()
 ```
 ## Hardware
 
-The same hardware as in the basic pump API raspberry implementation is used, this version of the API supports taking temperature values from a sensor.
+The same hardware as in the basic pump API raspberry implementation is used.
 
 * L298N motor driver [board](https://howtomechatronics.com/tutorials/arduino/arduino-dc-motor-control-tutorial-l298n-pwm-h-bridge/)
 * 12V, 3W peristaltic dosing [pump](https://www.adafruit.com/product/1150)
