@@ -196,6 +196,8 @@ The same hardware can be connected to the ESP8266 device as with the Raspberry P
 
 This more elaborated version of the API adds more functionality, including the posibility of turning the pump on for an specified amount of time and also to take measurements of temperature using a temperature probe of the water. This version also organizes the data to be validated in the JSON request and the data to be sent as a JSON response using models (Specifications of fields and their values). The next diagram shows the main hardware components that are coupled to the API.
 
+<img src="https://github.com/rmorenoga/pump-api/blob/devel/ReadmeImages/PumpSensorTank.jpg" width="700">
+
 ## Specification
 
 
